@@ -29,6 +29,7 @@ class CheckinController extends GetxController {
       Get.snackbar('Error Checkin!', l);
     }, (r) {
       GetStorage().write(PrefsKey.LOGED_EMAIL, email.value);
+      GetStorage().write(PrefsKey.IS_LOGIN, true);
 
       Get.offNamed(Routes.dashboard);
     });
