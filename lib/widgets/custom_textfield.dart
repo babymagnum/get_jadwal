@@ -32,9 +32,11 @@ class CustomTextField extends StatelessWidget {
     this.textAlign,
     this.hideErrorText = false,
     this.autovalidateMode,
-    this.hideCounter = true, this.onTap, this.readOnly = false
+    this.hideCounter = true, this.onTap, this.readOnly = false,
+    this.borderRadius = 6
   }) : super(key: key);
 
+  final double borderRadius;
   final int? maxLength;
   final TextEditingController? controller;
   final onTap;
@@ -98,6 +100,9 @@ class CustomTextField extends StatelessWidget {
         contentPadding: padding ?? const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         border: border,
         enabledBorder: border,
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: ThemeColor.pink), borderRadius: BorderRadius.circular(borderRadius)
+        ),
         prefix: prefix,
         suffixIcon: Padding(
           padding: const EdgeInsets.only(right: 10),

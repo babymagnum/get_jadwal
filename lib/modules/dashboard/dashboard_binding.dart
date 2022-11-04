@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:get_jadwal/modules/dashboard/dashboard_controller.dart';
+import 'package:get_jadwal/modules/dashboard/controllers/dashboard_controller.dart';
 
 class DashboardBinding extends Bindings {
   @override

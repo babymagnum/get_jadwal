@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class ThemeColor {
   static Color orange = const Color(0xFFF15C22);
-  static Color purple = const Color(0xFF512C62);
+  static Color purple = const Color(0xFF3A0B48);
+  static Color pink = const Color(0xFFD9019C);
   // secondary
   static Color red = const Color(0xFFC70D3A);
   static Color red2 = const Color(0xFFDF0000);
@@ -21,5 +22,5 @@ class ThemeColor {
   static Color textPrimary = const Color(0xff100720);
   static Color textSecondary = const Color(0xffF1F1F1);
   static Color textDisabled = const Color(0xff595D62);
-  static Color hint = const Color(0xffBBBBBB);
+  static Color hint = const Color(0xffA4A4A4);
 }
