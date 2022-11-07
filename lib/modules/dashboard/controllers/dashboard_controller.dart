@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:get_jadwal/data/model/all_schedule.dart';
+import 'package:get_jadwal/data/model/detail_schedule.dart';
 import 'package:get_jadwal/data/repository/schedule_repository.dart';
 import 'package:get_jadwal/data/values/enums.dart';
 import 'package:get_jadwal/data/values/strings.dart';
@@ -49,8 +50,8 @@ class DashboardController extends GetxController {
     response.fold((l) {}, (r) => schedule(r));
   }
 
-  void showDialogCreateSchedule({bool hideSelectDay = false}) async {
-    await Get.dialog(CreateScheduleDialog());
+  void showDialogCreateSchedule({required CreateEditSchedule dialogType, String? currentDetailDay, ScheduleItem? scheduleItem}) async {
+    await Get.dialog(CreateEditScheduleDialog(currentDetailDay: currentDetailDay, scheduleItem: scheduleItem, dialogType: dialogType,));
     Get.delete<CreateScheduleController>();
   }
 

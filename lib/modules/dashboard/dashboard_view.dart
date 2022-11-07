@@ -83,10 +83,11 @@ class DashboardView extends GetView<DashboardController> {
                   padding: const EdgeInsets.all(9.5),
                   iconData: Icons.add,
                   key: const Key('btn-create-schedule'),
-                  onPressed: () => controller.showDialogCreateSchedule(),
+                  onPressed: () => controller.showDialogCreateSchedule(dialogType: CreateEditSchedule.create),
                 )
               ],
-            ).marginOnly(top: 24).marginSymmetric(horizontal: 20),
+            ).marginOnly(top: 16, bottom: 16).marginSymmetric(horizontal: 16),
+            const Divider(height: 1, color: Color(0xffBBBBBB),),
             Expanded(child: _scheduleGroup)
           ],
         );

@@ -13,7 +13,6 @@ class CustomReload extends StatelessWidget {
       child: Column(
         children: [
           const Icon(Icons.refresh, size: 20, color: Colors.black45,),
-          const SizedBox(height: 10,),
           Text('Tap to reload.', style: ThemeText.poppinsSemiBold.copyWith(fontSize: 16, color: Colors.black26),)
         ],
       ),

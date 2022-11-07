@@ -4,14 +4,16 @@ import 'package:get_jadwal/data/model/detail_schedule.dart';
 
 class ListScheduleItem extends StatelessWidget {
   final ScheduleItem data;
+  final Function() onEditTap;
+  final Function() onDeleteTap;
 
-  const ListScheduleItem({Key? key, required this.data}) : super(key: key);
+  const ListScheduleItem({Key? key, required this.onEditTap, required this.onDeleteTap, required this.data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       key: const Key('card-item-title'),
-      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -22,17 +24,25 @@ class ListScheduleItem extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Text(data.title ?? '', style: ThemeText.poppinsRegular.copyWith(fontSize: 20),),
+            child: Text(data.title ?? '', style: ThemeText.poppinsRegular.copyWith(fontSize: 16),),
           ),
           const SizedBox(width: 10,),
-          const SizedBox(
-            height: 24, width: 24,
-            child: Icon(Icons.edit_outlined, color: Color(0xffBBBBBB), size: 24,),
+          GestureDetector(
+            key: const Key('card-item-edit'),
+            onTap: () => onEditTap(),
+            child: const SizedBox(
+              height: 24, width: 24,
+              child: Icon(Icons.edit_outlined, color: Color(0xffBBBBBB), size: 24,),
+            ),
           ),
-          const SizedBox(width: 23,),
-          const SizedBox(
-            height: 24, width: 24,
-            child: Icon(Icons.delete_outlined, color: Color(0xffBBBBBB), size: 24,),
+          const SizedBox(width: 16,),
+          GestureDetector(
+            key: const Key('card-item-delete'),
+            onTap: () => onDeleteTap(),
+            child: const SizedBox(
+              height: 24, width: 24,
+              child: Icon(Icons.delete_outlined, color: Color(0xffBBBBBB), size: 24,),
+            ),
           )
         ],
       ),

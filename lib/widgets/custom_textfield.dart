@@ -72,7 +72,6 @@ class CustomTextField extends StatelessWidget {
     return TextFormField(
       readOnly: readOnly,
       onTap: onTap,
-      key: key,
       minLines: minLines,
       focusNode: focusNode,
       enabled: enabled,

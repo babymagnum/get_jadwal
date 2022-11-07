@@ -14,6 +14,12 @@ class BaseService extends GetConnect {
     return data;
   }
 
+  Future<Response<dynamic>> patchRequest({required String url, required dynamic body}) async {
+    final data = await patch(url, body);
+
+    return data;
+  }
+
   @override
   void onInit() {
     httpClient.baseUrl = Strings.baseUrl;

@@ -32,8 +32,7 @@ class DetailSchedule {
 
 class ScheduleItem {
   ScheduleItem({
-      this.id, 
-      this.userId, 
+      this.id,
       this.title, 
       this.day, 
       this.createdAt, 
@@ -41,14 +40,12 @@ class ScheduleItem {
 
   ScheduleItem.fromJson(dynamic json) {
     id = json['id'];
-    userId = json['user_id'];
     title = json['title'];
     day = json['day'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
   }
   int? id;
-  String? userId;
   String? title;
   String? day;
   String? createdAt;
@@ -57,7 +54,6 @@ class ScheduleItem {
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
-    map['user_id'] = userId;
     map['title'] = title;
     map['day'] = day;
     map['createdAt'] = createdAt;
