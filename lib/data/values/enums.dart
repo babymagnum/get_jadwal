@@ -1,3 +1,3 @@
 enum RequestStatus {
-  loading, error, success
+  idle, loading, error, success
 }

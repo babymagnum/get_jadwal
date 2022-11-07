@@ -2,38 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_jadwal/core/theme/colors_theme.dart';
 import 'package:get_jadwal/core/theme/text_theme.dart';
+import 'package:get_jadwal/data/model/day.dart';
+import 'package:get_jadwal/data/values/enums.dart';
 import 'package:get_jadwal/modules/dashboard/controllers/create_schedule_controller.dart';
 import 'package:get_jadwal/widgets/custom_textbutton.dart';
 import 'package:get_jadwal/widgets/custom_textfield.dart';
 
 class CreateScheduleDialog extends StatelessWidget {
-  CreateScheduleDialog({Key? key}) : super(key: key);
+  final bool hideSelectDay;
+
+  CreateScheduleDialog({Key? key, this.hideSelectDay = false}) : super(key: key);
 
   final _dropdownSelectDayKey = GlobalKey();
   final _controller = Get.put(CreateScheduleController());
 
   Widget get _dropdownSelectDay {
     return Offstage(
-      child: Obx(() => DropdownButton<String>(
+      child: Obx(() => DropdownButton<Day>(
           key: _dropdownSelectDayKey,
-          value: _controller.selectedDay.value == '' ? 'Senin' : _controller.selectedDay.value,
+          value: _controller.selectedDay.value.isEmpty ? _controller.day.first : _controller.selectedDay.value,
           elevation: 16,
           style: const TextStyle(color: Colors.deepPurple),
           underline: Container(
             height: 2,
             color: Colors.deepPurpleAccent,
           ),
-          onChanged: (String? value) {
+          onChanged: (Day? value) {
             _controller.selectedDay(value);
           },
-          items: ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'].map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
+          items: _controller.day.map<DropdownMenuItem<Day>>((Day value) {
+            return DropdownMenuItem<Day>(
+              key: Key('btn-dropdown-${value.day}'),
               value: value,
               child: Row(
                 children: [
                   SizedBox(
                     width: 100,
-                    child: Text(value, style: ThemeText.poppinsRegular.copyWith(fontSize: 16),),
+                    child: Text(value.day ?? '', style: ThemeText.poppinsRegular.copyWith(fontSize: 16),),
                   ),
                   value == _controller.selectedDay.value ?
                   Icon(Icons.check_rounded, color: ThemeColor.pink, size: 20,).marginOnly(left: 24) :
@@ -111,32 +116,39 @@ class CreateScheduleDialog extends StatelessWidget {
                       onChanged: (value) => _controller.inputSchedule(value.trim()),
                     ).marginSymmetric(horizontal: 16),
                   ),
-                  const SizedBox(height: 20,),
-                  Text('Pilih Hari', style: ThemeText.poppinsMedium.copyWith(fontSize: 16),).marginSymmetric(horizontal: 16),
-                  const SizedBox(height: 8,),
-                  GestureDetector(
-                    onTap: () => _openDropdownSelectDay(),
-                    child: Container(
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      key: const Key('form-day'),
-                      decoration: BoxDecoration(
-                          border: Border.all(color: const Color(0xffE5E5E5)),
-                          borderRadius: BorderRadius.circular(6)
-                      ),
-                      height: 48,
-                      child: Obx(() {
-                        return Row(
-                          children: [
-                            Expanded(child: Text(_controller.selectedDay.value.isEmpty ? 'Pilih Hari' : _controller.selectedDay.value, style: ThemeText.poppinsRegular.copyWith(fontSize: 16, color: _controller.selectedDay.value.isEmpty ? ThemeColor.hint : ThemeColor.textPrimary),)),
-                            const SizedBox(width: 10,),
-                            Icon(Icons.keyboard_arrow_down_rounded, color: ThemeColor.textPrimary, size: 24,)
-                          ],
-                        );
-                      }),
+                  if (!hideSelectDay) ...[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 20,),
+                        Text('Pilih Hari', style: ThemeText.poppinsMedium.copyWith(fontSize: 16),).marginSymmetric(horizontal: 16),
+                        const SizedBox(height: 8,),
+                        GestureDetector(
+                          onTap: () => _openDropdownSelectDay(),
+                          child: Container(
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            key: const Key('form-day'),
+                            decoration: BoxDecoration(
+                                border: Border.all(color: const Color(0xffE5E5E5)),
+                                borderRadius: BorderRadius.circular(6)
+                            ),
+                            height: 48,
+                            child: Obx(() {
+                              return Row(
+                                children: [
+                                  Expanded(child: Text(_controller.selectedDay.value.isEmpty ? 'Pilih Hari' : _controller.selectedDay.value.day ?? '', style: ThemeText.poppinsRegular.copyWith(fontSize: 16, color: _controller.selectedDay.value.isEmpty ? ThemeColor.hint : ThemeColor.textPrimary),)),
+                                  const SizedBox(width: 10,),
+                                  Icon(Icons.keyboard_arrow_down_rounded, color: ThemeColor.textPrimary, size: 24,)
+                                ],
+                              );
+                            }),
+                          ),
+                        ).marginSymmetric(horizontal: 16),
+                        _dropdownSelectDay,
+                      ],
                     ),
-                  ).marginSymmetric(horizontal: 16),
-                  _dropdownSelectDay,
+                  ],
                   const SizedBox(height: 20,),
                   const Divider(height: 1, color: Color(0xffE5E5E5),),
                   const SizedBox(height: 8,),
@@ -146,12 +158,12 @@ class CreateScheduleDialog extends StatelessWidget {
                       Obx(() {
                         return CustomTextButton(
                           key: const Key('btn-submit'),
-                          onPressed: _controller.enableBtnSimpan ? () {} : null,
+                          onPressed: _controller.enableBtnSimpan ? () => _controller.postSchedule() : null,
                           borderColor: Colors.transparent,
                           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1000)),
                           buttonColor: ThemeColor.pink.withOpacity(_controller.enableBtnSimpan ? 1 : 0.2),
-                          text: 'Simpan',
+                          text: _controller.createScheduleStatus.value == RequestStatus.loading ? 'Creating...' : 'Simpan',
                         );
                       })
                     ],

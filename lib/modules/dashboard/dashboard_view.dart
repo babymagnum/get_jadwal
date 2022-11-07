@@ -86,7 +86,7 @@ class DashboardView extends GetView<DashboardController> {
                   onPressed: () => controller.showDialogCreateSchedule(),
                 )
               ],
-            ).marginOnly(top: 28).marginSymmetric(horizontal: 20),
+            ).marginOnly(top: 24).marginSymmetric(horizontal: 20),
             Expanded(child: _scheduleGroup)
           ],
         );

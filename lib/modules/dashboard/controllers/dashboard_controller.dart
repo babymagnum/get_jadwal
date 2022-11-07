@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:get_jadwal/data/model/all_schedule.dart';
-import 'package:get_jadwal/data/repository/dashboard_repository.dart';
+import 'package:get_jadwal/data/repository/schedule_repository.dart';
 import 'package:get_jadwal/data/values/enums.dart';
 import 'package:get_jadwal/data/values/strings.dart';
 import 'package:get_jadwal/modules/dashboard/controllers/create_schedule_controller.dart';
@@ -8,7 +8,7 @@ import 'package:get_jadwal/modules/dashboard/widgets/create_schedule_dialog.dart
 import 'package:get_storage/get_storage.dart';
 
 class DashboardController extends GetxController {
-  final dashboardRepository = DashboardRepositoryImpl();
+  final _scheduleRepository = ScheduleRepositoryImpl();
 
   var scheduleStatus = RequestStatus.loading.obs;
   var schedule = AllScheduleData().obs;
@@ -39,9 +39,9 @@ class DashboardController extends GetxController {
     return GetStorage().read(PrefsKey.LOGED_EMAIL) ?? '';
   }
 
-  void getAllSchedule() async {
-    scheduleStatus(RequestStatus.loading);
-    final response = await dashboardRepository.getAllSchedule();
+  void getAllSchedule({bool hideLoading = false}) async {
+    if (!hideLoading) scheduleStatus(RequestStatus.loading);
+    final response = await _scheduleRepository.getAllSchedule();
     scheduleStatus(response.isLeft() ? RequestStatus.error : RequestStatus.success);
 
     if (response.isLeft()) return;
@@ -49,7 +49,7 @@ class DashboardController extends GetxController {
     response.fold((l) {}, (r) => schedule(r));
   }
 
-  void showDialogCreateSchedule() async {
+  void showDialogCreateSchedule({bool hideSelectDay = false}) async {
     await Get.dialog(CreateScheduleDialog());
     Get.delete<CreateScheduleController>();
   }

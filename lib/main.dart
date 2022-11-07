@@ -25,7 +25,7 @@ void initFlutterDriver() {
 }
 
 void main() async {
-  // initFlutterDriver();
+  initFlutterDriver();
 
   initCoreService();
 
