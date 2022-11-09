@@ -3,10 +3,7 @@ import 'package:get_jadwal/data/model/all_schedule.dart';
 import 'package:get_jadwal/data/model/detail_schedule.dart';
 import 'package:get_jadwal/data/repository/schedule_repository.dart';
 import 'package:get_jadwal/data/values/enums.dart';
-import 'package:get_jadwal/data/values/strings.dart';
-import 'package:get_jadwal/modules/dashboard/controllers/create_schedule_controller.dart';
 import 'package:get_jadwal/modules/dashboard/widgets/create_schedule_dialog.dart';
-import 'package:get_storage/get_storage.dart';
 
 class DashboardController extends GetxController {
   final _scheduleRepository = ScheduleRepositoryImpl();
@@ -36,10 +33,6 @@ class DashboardController extends GetxController {
     }
   }
 
-  String get loggedEmail {
-    return GetStorage().read(PrefsKey.LOGED_EMAIL) ?? '';
-  }
-
   void getAllSchedule({bool hideLoading = false}) async {
     if (!hideLoading) scheduleStatus(RequestStatus.loading);
     final response = await _scheduleRepository.getAllSchedule();
@@ -51,8 +44,7 @@ class DashboardController extends GetxController {
   }
 
   void showDialogCreateSchedule({required CreateEditSchedule dialogType, String? currentDetailDay, ScheduleItem? scheduleItem}) async {
-    await Get.dialog(CreateEditScheduleDialog(currentDetailDay: currentDetailDay, scheduleItem: scheduleItem, dialogType: dialogType,));
-    Get.delete<CreateScheduleController>();
+    Get.dialog(CreateEditScheduleDialog(currentDetailDay: currentDetailDay, scheduleItem: scheduleItem, dialogType: dialogType,));
   }
 
   @override

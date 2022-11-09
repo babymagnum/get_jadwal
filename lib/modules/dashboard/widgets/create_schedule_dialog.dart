@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get_jadwal/core/theme/colors_theme.dart';
 import 'package:get_jadwal/core/theme/text_theme.dart';
@@ -17,6 +18,7 @@ class CreateEditScheduleDialog extends StatelessWidget {
   CreateEditScheduleDialog({Key? key, required this.dialogType, this.scheduleItem, this.currentDetailDay}) : super(key: key);
 
   final _dropdownSelectDayKey = GlobalKey();
+  late CreateScheduleController _controller;
 
   bool get _hideSelectDay => currentDetailDay != null || scheduleItem != null;
 
@@ -24,7 +26,7 @@ class CreateEditScheduleDialog extends StatelessWidget {
     return Offstage(
       child: Obx(() => DropdownButton<Day>(
           key: _dropdownSelectDayKey,
-          value: CreateScheduleController.to.selectedDay.value.isEmpty ? CreateScheduleController.to.day.first : CreateScheduleController.to.selectedDay.value,
+          value: _controller.selectedDay.value.isEmpty ? _controller.day.first : _controller.selectedDay.value,
           elevation: 16,
           style: const TextStyle(color: Colors.deepPurple),
           underline: Container(
@@ -32,9 +34,9 @@ class CreateEditScheduleDialog extends StatelessWidget {
             color: Colors.deepPurpleAccent,
           ),
           onChanged: (Day? value) {
-            CreateScheduleController.to.selectedDay(value);
+            _controller.selectedDay(value);
           },
-          items: CreateScheduleController.to.day.map<DropdownMenuItem<Day>>((Day value) {
+          items: _controller.day.map<DropdownMenuItem<Day>>((Day value) {
             return DropdownMenuItem<Day>(
               key: Key('btn-dropdown-${value.day}'),
               value: value,
@@ -44,7 +46,7 @@ class CreateEditScheduleDialog extends StatelessWidget {
                     width: 100,
                     child: Text(value.day ?? '', style: ThemeText.poppinsRegular.copyWith(fontSize: 16),),
                   ),
-                  value == CreateScheduleController.to.selectedDay.value ?
+                  value == _controller.selectedDay.value ?
                   Icon(Icons.check_rounded, color: ThemeColor.pink, size: 20,).marginOnly(left: 24) :
                   Container()
                 ],
@@ -83,6 +85,8 @@ class CreateEditScheduleDialog extends StatelessWidget {
     return GetBuilder<CreateScheduleController>(
       init: CreateScheduleController(_hideSelectDay, scheduleItem),
       builder: (controller) {
+        _controller = controller;
+
         return Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -128,10 +132,15 @@ class CreateEditScheduleDialog extends StatelessWidget {
                           ).marginSymmetric(horizontal: 16),
                         ),
                         if (controller.showInputScheduleError) ...[
-                          Text('*Field Mata Kuliah kosong!', key: const Key('field-error-matkul'), style: ThemeText.poppinsRegular.copyWith(
-                            fontSize: 12,
-                            color: ThemeColor.error,
-                          ),).marginSymmetric(horizontal: 16)
+                          RichText(key: const Key('field-error-matkul'), text: TextSpan(
+                              children: [
+                                WidgetSpan(child: SvgPicture.asset('assets/svg/ep_warning-filled.svg', width: 16, height: 16,).marginOnly(right: 8.4)),
+                                TextSpan(
+                                    text: 'Field Mata Kuliah kosong!',
+                                    style: ThemeText.poppinsRegular.copyWith(fontSize: 12, color: ThemeColor.error)
+                                )
+                              ]
+                          )).marginSymmetric(horizontal: 16)
                         ],
                         if (!_hideSelectDay) ...[
                           Column(
@@ -140,7 +149,7 @@ class CreateEditScheduleDialog extends StatelessWidget {
                               const SizedBox(height: 20,),
                               Text('Pilih Hari', style: ThemeText.poppinsMedium.copyWith(fontSize: 16),).marginSymmetric(horizontal: 16),
                               const SizedBox(height: 8,),
-                              GestureDetector(
+                              InkWell(
                                 onTap: () => _openDropdownSelectDay(),
                                 child: Container(
                                   alignment: Alignment.center,
@@ -165,10 +174,15 @@ class CreateEditScheduleDialog extends StatelessWidget {
                               _dropdownSelectDay,
                               if (controller.showSelectDayError) ...[
                                 const SizedBox(height: 8,),
-                                Text('*Field Pilih Hari kosong!', key: const Key('field-error-pilih-hari'), style: ThemeText.poppinsRegular.copyWith(
-                                  fontSize: 12,
-                                  color: ThemeColor.error,
-                                ),).marginSymmetric(horizontal: 16)
+                                RichText(key: const Key('field-error-pilih-hari'), text: TextSpan(
+                                    children: [
+                                      WidgetSpan(child: SvgPicture.asset('assets/svg/ep_warning-filled.svg', width: 16, height: 16,).marginOnly(right: 8.4)),
+                                      TextSpan(
+                                          text: 'Field Pilih Hari kosong!',
+                                          style: ThemeText.poppinsRegular.copyWith(fontSize: 12, color: ThemeColor.error)
+                                      )
+                                    ]
+                                )).marginSymmetric(horizontal: 16)
                               ],
                             ],
                           ),
@@ -183,6 +197,8 @@ class CreateEditScheduleDialog extends StatelessWidget {
                               return CustomTextButton(
                                 key: const Key('btn-submit'),
                                 onPressed: () {
+                                  controller.btnSimpanClicked(true);
+
                                   if (scheduleItem != null) {
                                     controller.patchSchedule();
                                   } else {

@@ -20,6 +20,12 @@ class BaseService extends GetConnect {
     return data;
   }
 
+  Future<Response<dynamic>> deleteRequest({required String url}) async {
+    final data = await delete(url);
+
+    return data;
+  }
+
   @override
   void onInit() {
     httpClient.baseUrl = Strings.baseUrl;

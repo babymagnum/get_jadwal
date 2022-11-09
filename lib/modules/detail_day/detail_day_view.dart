@@ -6,8 +6,10 @@ import 'package:get_jadwal/core/theme/colors_theme.dart';
 import 'package:get_jadwal/core/theme/text_theme.dart';
 import 'package:get_jadwal/data/values/enums.dart';
 import 'package:get_jadwal/modules/dashboard/controllers/dashboard_controller.dart';
-import 'package:get_jadwal/modules/detail_day/detail_day_controller.dart';
+import 'package:get_jadwal/modules/detail_day/controllers/detail_day_controller.dart';
+import 'package:get_jadwal/modules/detail_day/widgets/delete_schedule_dialog.dart';
 import 'package:get_jadwal/modules/detail_day/widgets/list_schedule_item.dart';
+import 'package:get_jadwal/widgets/checkout_button.dart';
 import 'package:get_jadwal/widgets/custom_reload.dart';
 import 'package:get_jadwal/widgets/custom_textbutton_icon.dart';
 
@@ -40,7 +42,11 @@ class DetailDayView extends GetView<DetailDayController> {
         shrinkWrap: true,
         itemBuilder: (_, index) => ListScheduleItem(
           data: controller.schedules[index],
-          onDeleteTap: () {},
+          onDeleteTap: () {
+            if (controller.schedules[index].id == null) return;
+
+            Get.dialog(DeleteScheduleDialog(schedule: controller.schedules[index]));
+          },
           onEditTap: () => _dashboardController.showDialogCreateSchedule(dialogType: CreateEditSchedule.edit, scheduleItem: controller.schedules[index]),
         ),
         separatorBuilder: (_, __) => const Divider(height: 10, color: Colors.transparent,),
@@ -56,6 +62,10 @@ class DetailDayView extends GetView<DetailDayController> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: ThemeColor.purple,
+        actions: const [
+          CheckoutButton(),
+          SizedBox(width: 16,)
+        ],
         title: Row(
           children: [
             GestureDetector(

@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_jadwal/data/model/day.dart';
 import 'package:get_jadwal/data/model/detail_schedule.dart';
 import 'package:get_jadwal/data/repository/schedule_repository.dart';
 import 'package:get_jadwal/data/values/enums.dart';
 import 'package:get_jadwal/modules/dashboard/controllers/dashboard_controller.dart';
-import 'package:get_jadwal/modules/detail_day/detail_day_controller.dart';
+import 'package:get_jadwal/modules/detail_day/controllers/detail_day_controller.dart';
 
 class CreateScheduleController extends GetxController {
   final bool hideSelectDay;
@@ -17,8 +16,6 @@ class CreateScheduleController extends GetxController {
 
   final _scheduleRepository = ScheduleRepositoryImpl();
   final _dashboardController = Get.find<DashboardController>();
-
-  static CreateScheduleController get to => Get.find();
   
   final day = [
     Day('Senin', 'monday'),
@@ -30,6 +27,7 @@ class CreateScheduleController extends GetxController {
   
   var inputSchedule = ''.obs;
   var selectedDay = Day.empty().obs;
+  var btnSimpanClicked = false.obs;
   var createScheduleStatus = RequestStatus.idle.obs;
 
   bool get enableBtnSimpan {
@@ -39,14 +37,18 @@ class CreateScheduleController extends GetxController {
   }
 
   bool get showInputScheduleError {
-    return inputSchedule.value.isEmpty && createScheduleStatus.value == RequestStatus.error;
+    return inputSchedule.value.isEmpty && btnSimpanClicked.value;
   }
 
   bool get showSelectDayError {
-    return selectedDay.value.isEmpty && createScheduleStatus.value == RequestStatus.error;
+    if (hideSelectDay) return false;
+
+    return selectedDay.value.isEmpty && btnSimpanClicked.value;
   }
 
   void patchSchedule() async {
+    if (showInputScheduleError) return;
+
     createScheduleStatus(RequestStatus.loading);
     final response = await _scheduleRepository.patchSchedule(scheduleItem?.id ?? 0, {
       "title": inputSchedule.value,
@@ -54,11 +56,8 @@ class CreateScheduleController extends GetxController {
     });
     createScheduleStatus(response.isLeft() ? RequestStatus.error : RequestStatus.success);
 
-    response.fold((l) {
-      Get.snackbar('Error!', 'Error: $l', backgroundColor: Colors.white);
-    }, (r) {
+    response.fold((l) {}, (r) {
       Get.back();
-      Get.snackbar('Success!', 'Mata Kuliah berhasil diperbarui!', backgroundColor: Colors.white);
 
       // check if this method called in detail day or no
       if (!Get.isRegistered<DetailDayController>()) return;
@@ -73,6 +72,8 @@ class CreateScheduleController extends GetxController {
   //
   // if [currentDetailDay] != null -> dialog opened from detail day screen.
   void postSchedule({String? currentDetailDay}) async {
+    if (showInputScheduleError || showSelectDayError) return;
+
     createScheduleStatus(RequestStatus.loading);
     final response = await _scheduleRepository.postSchedule({
       "title": inputSchedule.value,
@@ -80,11 +81,8 @@ class CreateScheduleController extends GetxController {
     });
     createScheduleStatus(response.isLeft() ? RequestStatus.error : RequestStatus.success);
     
-    response.fold((l) {
-      Get.snackbar('Error!', 'Error: $l', backgroundColor: Colors.white);
-    }, (r) {
+    response.fold((l) {}, (r) {
       Get.back();
-      Get.snackbar('Success!', 'Mata Kuliah berhasil dibuat', backgroundColor: Colors.white);
 
       _dashboardController.getAllSchedule();
 

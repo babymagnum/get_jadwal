@@ -5,11 +5,9 @@ import 'package:get_jadwal/core/theme/text_theme.dart';
 import 'package:get_jadwal/data/values/enums.dart';
 import 'package:get_jadwal/modules/dashboard/controllers/dashboard_controller.dart';
 import 'package:get_jadwal/modules/dashboard/widgets/day_item.dart';
-import 'package:get_jadwal/routes/routes.dart';
+import 'package:get_jadwal/widgets/checkout_button.dart';
 import 'package:get_jadwal/widgets/custom_reload.dart';
-import 'package:get_jadwal/widgets/custom_textbutton.dart';
 import 'package:get_jadwal/widgets/custom_textbutton_icon.dart';
-import 'package:get_storage/get_storage.dart';
 
 class DashboardView extends GetView<DashboardController> {
   const DashboardView({Key? key}) : super(key: key);
@@ -50,24 +48,9 @@ class DashboardView extends GetView<DashboardController> {
       appBar: AppBar(
         backgroundColor: ThemeColor.purple,
         title: Text('GetJadwal', style: ThemeText.poppinsBold.copyWith(fontSize: 18, color: Colors.white), key: const ValueKey('header-title'),),
-        actions: [
-          Center(
-            child: SizedBox(
-              height: 36,
-              child: CustomTextButton(
-                key: Key('btn-logout'),
-                onPressed: () async {
-                  await GetStorage().erase();
-                  Get.offAllNamed(Routes.checkin);
-                },
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                buttonColor: ThemeColor.pink,
-                textWidget: Text('Checkout | ${controller.loggedEmail}', style: ThemeText.poppinsBold.copyWith(color: Colors.white, fontSize: 12),),
-              ),
-            ),
-          ),
-          const SizedBox(width: 16,)
+        actions: const [
+          CheckoutButton(),
+          SizedBox(width: 16,)
         ],
       ),
       body: Obx(() {

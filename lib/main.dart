@@ -10,22 +10,20 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 import 'package:flutter_driver/driver_extension.dart';
 
+// Put all controllers that you want to use it globally.
 void initCoreService() {
   Get.put(BaseService(), permanent: true);
 }
 
-void initFlutterDriver() {
+void initFlutterDriver() async {
   enableFlutterDriverExtension();
 
-  setUpAll(() async {
-    // change [dartVmServiceUrl] url to device url if needed
-    // await FlutterDriver.connect(dartVmServiceUrl: 'http://127.0.0.1:52750/IU8BCGukx_I=/');
-    await FlutterDriver.connect();
-  });
+  await FlutterDriver.connect();
 }
 
 void main() async {
-  initFlutterDriver();
+  // Uncomment below code for automation build test.
+  // initFlutterDriver();
 
   initCoreService();
 

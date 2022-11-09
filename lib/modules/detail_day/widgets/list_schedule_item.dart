@@ -12,7 +12,6 @@ class ListScheduleItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      key: const Key('card-item-title'),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -24,7 +23,7 @@ class ListScheduleItem extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Text(data.title ?? '', style: ThemeText.poppinsRegular.copyWith(fontSize: 16),),
+            child: Text(data.title ?? '', key: const Key('card-item-title'), style: ThemeText.poppinsRegular.copyWith(fontSize: 16),),
           ),
           const SizedBox(width: 10,),
           GestureDetector(

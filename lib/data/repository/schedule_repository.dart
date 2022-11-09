@@ -10,6 +10,7 @@ import 'package:get_storage/get_storage.dart';
 abstract class ScheduleRepository {
   Future<Either<String, AllScheduleData>> getAllSchedule();
   Future<Either<String, ScheduleItem>> postSchedule(dynamic body);
+  Future<Either<String, bool>> deleteSchedule(int scheduleId);
   Future<Either<String, ScheduleItem>> patchSchedule(int scheduleId, dynamic body);
   Future<Either<String, List<ScheduleItem>>> getDetailSchedule(String email, String day);
 }
@@ -66,6 +67,17 @@ class ScheduleRepositoryImpl extends ScheduleRepository {
       final data = AddSchedule.fromJson(response.body);
 
       return data.data != null ? Right(data.data!) : Left(response.body['message'] ?? 'Tidak ada data');
+    } else {
+      return Left(response.body['message'] ?? 'Tidak ada data');
+    }
+  }
+
+  @override
+  Future<Either<String, bool>> deleteSchedule(int scheduleId) async {
+    final response = await baseService.deleteRequest(url: '/schedule?email=$email&id=$scheduleId');
+
+    if (response.isOk) {
+      return const Right(true);
     } else {
       return Left(response.body['message'] ?? 'Tidak ada data');
     }
