@@ -17,8 +17,7 @@ class CheckinRepositoryImpl extends CheckinRepository {
       "email": email
     });
 
-    if (response.statusCode == 200 && response.isOk) {
-      log('checkin ${response.body}');
+    if (response.isOk) {
       return const Right(true);
     } else {
       return Left(response.body['message'] ?? 'Request error!');
