@@ -47,11 +47,12 @@ class DashboardView extends GetView<DashboardController> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ThemeColor.purple,
-        title: Text('GetJadwal', style: ThemeText.poppinsBold.copyWith(fontSize: 18, color: Colors.white), key: const ValueKey('header-title'),),
-        actions: const [
-          CheckoutButton(),
-          SizedBox(width: 16,)
-        ],
+        title: Row(
+          children: [
+            Expanded(child: Text('GetJadwal', style: ThemeText.poppinsBold.copyWith(fontSize: 18, color: Colors.white), key: const ValueKey('header-title'),)),
+            const Expanded(child: CheckoutButton()),
+          ],
+        ),
       ),
       body: Obx(() {
         return Column(

@@ -62,10 +62,6 @@ class DetailDayView extends GetView<DetailDayController> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: ThemeColor.purple,
-        actions: const [
-          CheckoutButton(),
-          SizedBox(width: 16,)
-        ],
         title: Row(
           children: [
             GestureDetector(
@@ -74,7 +70,8 @@ class DetailDayView extends GetView<DetailDayController> {
               child: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 24,),
             ),
             const SizedBox(width: 19,),
-            Text(controller.selectedDay, style: ThemeText.poppinsBold.copyWith(fontSize: 18, color: Colors.white), key: const Key('detail-title'),),
+            Expanded(child: Text(controller.selectedDay, style: ThemeText.poppinsBold.copyWith(fontSize: 18, color: Colors.white), key: const Key('detail-title'),)),
+            Expanded(child: const CheckoutButton()),
           ],
         ),
       ),

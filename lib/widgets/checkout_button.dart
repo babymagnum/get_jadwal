@@ -24,7 +24,7 @@ class CheckoutButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           buttonColor: ThemeColor.pink,
-          textWidget: Text('Checkout | ${GetStorage().read(PrefsKey.LOGED_EMAIL)}', style: ThemeText.poppinsBold.copyWith(color: Colors.white, fontSize: 12),),
+          textWidget: Text('Checkout | asdasda sdasd ${GetStorage().read(PrefsKey.LOGED_EMAIL)}', maxLines: 1, overflow: TextOverflow.ellipsis, style: ThemeText.poppinsBold.copyWith(color: Colors.white, fontSize: 12),),
         ),
       ),
     );
